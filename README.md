@@ -12,6 +12,6 @@ You can also contact me in:
  - Discord - https://discordapp.com/users/1112211986827198564/
  - Telegram - https://t.me/ekitaru
 
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Vinemy/4x-2/master?style=flat)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Vinermy/4x-2/master?style=flat)
 ![Static Badge](https://img.shields.io/badge/Version-Pre--Alpha-red)
 
