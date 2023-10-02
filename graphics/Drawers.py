@@ -67,14 +67,9 @@ class PlanetDrawer:
         radius = max(int(self.planet.radius * self.body_scale_factor), 5)
         draw_circle_by_center_and_radius(self.draw_object, x, y, radius,
                                          self.color)
-        print(f"{x=}, {y=}, {radius=}")
 
     def draw_orbit(self):
-        print(11)
         x = int(self.planet.host_body.x * self.scale_factor) + self.translate[0]
-        print(12)
         y = int(self.planet.host_body.y * self.scale_factor) + self.translate[1]
-        print(13)
         draw_circle_by_center_and_radius(self.draw_object, x, y, int(self.planet.orbital_radius * self.scale_factor),
                                          border=self.orbit_color)
-        print(14)

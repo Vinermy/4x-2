@@ -2,10 +2,10 @@ import sys
 
 from PIL.Image import Image
 from PIL.ImageQt import ImageQt
-from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtGui import QImage, QPixmap, QResizeEvent, QScreen
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QWidget, QLabel
-from PySide6.QtCore import QFile, QIODevice
+from PySide6.QtCore import QFile, QIODevice, QSize
 
 
 class MainWindow:
@@ -30,15 +30,15 @@ class MainWindow:
             print(loader.errorString())
             sys.exit(-1)
 
+        self.window.showMaximized()
         self.is_loaded = True
-        self.window.show()
 
         sys.exit(app.exec())
 
     def update_frame_image(self, img: Image):
         lbl: QLabel | object = self.window.findChild(QLabel, "lblDisplay")
-        lbl.setScaledContents(True)
         lbl.setPixmap(QPixmap.fromImage(ImageQt(img)), )
+        lbl.setScaledContents(True)
 
     def get_display_size(self) -> list[int, int]:
         lbl: QLabel | object = self.window.findChild(QLabel, "lblDisplay")

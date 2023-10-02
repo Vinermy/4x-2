@@ -24,12 +24,8 @@ class Frame:
             dr.draw()
 
         for planet in objects["objects"]["planets"]:
-            print("1")
             dr = PlanetDrawer(planet,  frame)
-            print("2")
             dr.draw_orbit()
-            print(3)
             dr.draw()
-            print(4)
 
         return frame
