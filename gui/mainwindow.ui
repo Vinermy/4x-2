@@ -77,6 +77,11 @@
            <height>992</height>
           </rect>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QVBoxLayout" name="vloSideMenu"/>
+          </item>
+         </layout>
         </widget>
        </widget>
       </item>

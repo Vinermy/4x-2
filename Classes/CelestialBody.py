@@ -86,7 +86,7 @@ class CelestialBody(object):
     name: str
     mass: float  # is measured in 10^12 kg
     radius: float  # is measured in 10^6 m
-
+    temperature: float  # is measured in Kelvins (praise the Lord Kelvin!)
     x: float  # Coordinates inside a solar system. Stars sit at (0,0), unless they are double
     y: float  # Measured in 10^6 m
 
@@ -94,7 +94,6 @@ class CelestialBody(object):
 class Star(CelestialBody):
     luminosity: float  # is measured in 10^12 Wt
     star_class: StarType
-    temperature: float  # is measured in Kelvins (praise the Lord Kelvin!)
 
     x = 0
     y = 0
@@ -134,7 +133,6 @@ class OrbitingBody(CelestialBody):
 
 class Planet(OrbitingBody):
     planet_type: str
-    temperature: float  # is measured in Kelvins
     type: PlanetType
 
     def __init__(self, temperature, planet_type, radius, mass, name, orbital_radius: float, orbital_period: float,
@@ -149,6 +147,7 @@ class Planet(OrbitingBody):
         self.orbital_radius = orbital_radius
         self.orbital_period = orbital_period
         self.theta = theta
+        self.x, self.y = self.calculate_xy()
 
     def get_max_buildings(self):
         return self.radius ** 2 * pi * 4 * PLANET_TYPES[self.planet_type][

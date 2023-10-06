@@ -4,6 +4,7 @@ from PIL import ImageDraw
 from PIL.Image import Image
 
 from Classes.CelestialBody import Star, Planet
+from Classes.SolarSystem import StarSystem
 
 
 def draw_circle_by_center_and_radius(d: ImageDraw.ImageDraw, center_x: int, center_y: int, radius: int,
@@ -73,3 +74,21 @@ class PlanetDrawer:
         y = int(self.planet.host_body.y * self.scale_factor) + self.translate[1]
         draw_circle_by_center_and_radius(self.draw_object, x, y, int(self.planet.orbital_radius * self.scale_factor),
                                          border=self.orbit_color)
+
+
+class StarSystemDrawer:
+    def __init__(self, system: StarSystem, image: Image):
+        self.system = system
+        self.image = image
+
+    def draw(self):
+        sd = StarDrawer(self.system.host_body, self.image)
+        sd.draw()
+
+        for body in self.system.orbiting_bodies:
+            match type(body):
+                case Planet:
+                    d = PlanetDrawer(body, self.image)
+                    d.draw_orbit()
+                    d.draw()
+

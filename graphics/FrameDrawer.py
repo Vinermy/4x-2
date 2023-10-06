@@ -1,8 +1,10 @@
 import json
 
 from PIL import Image
+from PIL.ImageDraw import ImageDraw
 
-from graphics.Drawers import StarDrawer, PlanetDrawer
+from Classes.SolarSystem import StarSystem
+from graphics.Drawers import StarSystemDrawer
 
 
 class Frame:
@@ -13,19 +15,14 @@ class Frame:
             c = json.load(con)
             self.bg_color = tuple(c["DRAWING-PARAMETERS"]["BACKGROUND-COLOR"])
 
-    def draw(self, objects: dict) -> Image.Image:
+    def draw(self, system: StarSystem, xy: tuple[int, int]) -> Image.Image:
         # Create image
-        frame = Image.new("RGB", tuple(objects["parameters"]["frame_xy"]), self.bg_color)
+        frame = Image.new("RGB", xy, self.bg_color)
+        draw = ImageDraw(frame, "RGB")
 
-        # Draw objects
-        # Draw stars
-        for star in objects["objects"]["stars"]:
-            dr = StarDrawer(star, frame)
-            dr.draw()
+        drawer = StarSystemDrawer(system, frame)
+        drawer.draw()
 
-        for planet in objects["objects"]["planets"]:
-            dr = PlanetDrawer(planet,  frame)
-            dr.draw_orbit()
-            dr.draw()
+        draw.text((10, 10), system.name, fill=(255, 255, 255))
 
         return frame
