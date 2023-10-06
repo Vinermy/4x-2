@@ -63,7 +63,7 @@ class Ui_MapTooltip(object):
         self.btnClose.setMinimumSize(QSize(30, 30))
         self.btnClose.setMaximumSize(QSize(30, 30))
         icon = QIcon()
-        icon.addFile(u"icons/xmark-solid.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"./gui/icons/xmark-solid.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnClose.setIcon(icon)
 
         self.horizontalLayout.addWidget(self.btnClose)
