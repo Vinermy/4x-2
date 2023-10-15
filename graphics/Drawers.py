@@ -17,6 +17,12 @@ def draw_circle_by_center_and_radius(d: ImageDraw.ImageDraw, center_x: int, cent
               outline=border if border != (0, 0, 0) else None, width=1)
 
 
+def display_name(d: ImageDraw.ImageDraw, xy: tuple[int, int], name: str):
+    d.text(
+        xy, name
+    )
+
+
 class StarDrawer:
     star: Star
     draw_object: ImageDraw.ImageDraw
@@ -36,10 +42,12 @@ class StarDrawer:
             self.scale_factor = float(c["DRAWING-PARAMETERS"]["SCALE-FACTOR"])
 
     def draw(self):
-        x = self.star.x * self.scale_factor
-        y = self.star.y * self.scale_factor
+        x = self.star.x * self.scale_factor + self.translate[0]
+        y = self.star.y * self.scale_factor + self.translate[1]
         radius = int(self.star.radius * self.body_scale_factor)
-        draw_circle_by_center_and_radius(self.draw_object, x + self.translate[0], y + self.translate[1], radius, self.color)
+        draw_circle_by_center_and_radius(self.draw_object, x, y, radius,
+                                         self.color)
+        display_name(self.draw_object, (x + radius, y + radius), self.star.name)
 
 
 class PlanetDrawer:
@@ -68,6 +76,7 @@ class PlanetDrawer:
         radius = max(int(self.planet.radius * self.body_scale_factor), 5)
         draw_circle_by_center_and_radius(self.draw_object, x, y, radius,
                                          self.color)
+        display_name(self.draw_object, (x + radius, y + radius), self.planet.name)
 
     def draw_orbit(self):
         x = int(self.planet.host_body.x * self.scale_factor) + self.translate[0]
@@ -91,4 +100,3 @@ class StarSystemDrawer:
                     d = PlanetDrawer(body, self.image)
                     d.draw_orbit()
                     d.draw()
-

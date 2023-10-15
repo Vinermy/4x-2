@@ -1,14 +1,37 @@
-from math import inf
-
-
 class StarType:
     shortName: str
     minTemp: int
-    maxTemp: int | type(inf)
+    maxTemp: int
+    # MinMass and MaxMass are measured in solar masses
+    minMass: float
+    maxMass: float
+    # MinRadius and MaxRadius are measured in solar radii
+    minRadius: float
+    maxRadius: float
+    # MinLum and MaxLum are measures in solar luminosities
+    minLum: float
+    maxLum: float
     color: str
     verboseName: str
 
-    def __init__(self, shortName: str, minTemp: int, maxTemp: int | type(inf), color: str, verboseName: str) -> None:
+    def __init__(self,
+                 shortName: str,
+                 minTemp: int,
+                 maxTemp: int,
+                 minMass: float,
+                 maxMass: float,
+                 minRadius: float,
+                 maxRadius: float,
+                 minLum: float,
+                 maxLum: float,
+                 color: str,
+                 verboseName: str):
+        self.maxLum = maxLum
+        self.minLum = minLum
+        self.maxRadius = maxRadius
+        self.minRadius = minRadius
+        self.maxMass = maxMass
+        self.minMass = minMass
         self.shortName = shortName
         self.minTemp = minTemp
         self.maxTemp = maxTemp

@@ -1,7 +1,7 @@
 {
   "DRAWING-PARAMETERS": {
     "SCALE-FACTOR": 0.001,
-    "BODY-SCALE-FACTOR": 10,
+    "BODY-SCALE-FACTOR": 0.01,
     "BACKGROUND-COLOR": [1, 2, 3],
     "ORBIT-COLOR": [255, 215, 0]
   },

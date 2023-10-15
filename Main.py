@@ -1,6 +1,4 @@
 import sys
-import time
-from threading import Thread
 
 from PySide6.QtWidgets import QApplication
 
@@ -11,14 +9,11 @@ from gui.MainWindow import MainWindow
 
 
 class App:
-    gui_thread: Thread
     frm = Frame()
     main_window: MainWindow
 
     def start(self):
-
-
-        sun = Star(radius=0.7,
+        sun = Star(radius=700,
                    mass=1.9 * 10 ** 18,
                    luminosity=3.8 * 10 ** 14,
                    temperature=5772,
@@ -38,9 +33,7 @@ class App:
 
         system = StarSystem("Solar system", sun, [planet])
 
-        window_thread = Thread(target=self.display_window, kwargs={"system": system})
-        window_thread.start()
-        self.main_window = MainWindow()
+        self.display_window(system)
 
     def display_window(self, system):
         app = QApplication(sys.argv)

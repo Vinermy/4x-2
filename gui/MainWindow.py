@@ -1,21 +1,26 @@
 import sys
+from datetime import datetime
 
 from PIL.Image import Image
 from PIL.ImageQt import ImageQt
-from PySide6.QtCore import QEvent, Qt
+from PySide6.QtCore import QEvent, Qt, QDate
 from PySide6.QtGui import QPixmap, QMouseEvent
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QDialog
 
 from Classes.CelestialBody import CelestialBody, Star, Planet
+from Classes.Game import Game
 from Classes.SolarSystem import CelestialBSystem, StarSystem
 from graphics.FrameDrawer import Frame
 from gui.MapTooltip import MapTooltip
 from gui.mainwindow_ui import Ui_MainWindow
+from gui.filesave_dialog_ui import FileSaveDialog
+from gui.new_game_dialog_ui import NewGameDialog
 
 
 class MainWindow(QMainWindow):
     is_ready = False
     current_system: CelestialBSystem | None = None
+    loaded_game: Game
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -23,18 +28,23 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.ui.centralwidget.installEventFilter(self)
         self.ui.lblDisplay.installEventFilter(self)
+        self.ui.btnSave.clicked.connect(self.save_game)
+        self.ui.btnNewGame.clicked.connect(self.new_game)
 
     def display(self, app: QApplication):
         self.showMaximized()
         self.is_ready = True
         sys.exit(app.exec())
 
-    def update_frame_image(self, img: Image, system: CelestialBSystem | None):
-        lbl = self.ui.lblDisplay
-        lbl.setPixmap(QPixmap.fromImage(ImageQt(img)))
-        lbl.setScaledContents(True)
-        if system is not None:
-            self.current_system = system
+    def update_frame_image(self):
+        if self.current_system is not None:
+            frame = Frame()
+            self.current_system: StarSystem
+            img = frame.draw(self.current_system, self.get_display_size())
+            lbl = self.ui.lblDisplay
+            lbl.setPixmap(QPixmap.fromImage(ImageQt(img)))
+            lbl.setScaledContents(True)
+
 
     def get_display_size(self) -> tuple[int, int]:
         lbl = self.ui.lblDisplay
@@ -57,8 +67,7 @@ class MainWindow(QMainWindow):
                 if self.current_system is not None:
                     frame = Frame()
                     self.current_system: StarSystem
-                    self.update_frame_image(frame.draw(self.current_system, self.get_display_size()),
-                                            self.current_system)
+                    self.update_frame_image()
 
                 return True
             else:
@@ -87,7 +96,7 @@ class MainWindow(QMainWindow):
         tooltip.ui.lblTitle.setText(obj.name)
 
         tooltip.ui.listWidget.addItem(f"Mass: {obj.mass * 10 ** 12:.2e} kg")
-        tooltip.ui.listWidget.addItem(f"Radius: {obj.radius * 10 * 6:.2e} m")
+        tooltip.ui.listWidget.addItem(f"Radius: {obj.radius * 10 ** 6:.2e} m")
         tooltip.ui.listWidget.addItem(f"Temperature: {obj.temperature:.2e} K")
 
         if isinstance(obj, Star):
@@ -103,3 +112,39 @@ class MainWindow(QMainWindow):
             tooltip.ui.listWidget.addItem(f"Orbital period: {obj.orbital_period} yr")
 
         self.ui.vloSideMenu.insertWidget(0, tooltip, alignment=Qt.AlignTop)
+
+    def save_game(self):
+        def accept_save(filename):
+            pass
+
+        qd = QDialog(self.ui.centralwidget)
+        qd.ui = FileSaveDialog()
+        qd.ui.setupUi(qd)
+
+        qd.accepted.connect(lambda: accept_save(qd.ui.lineEdit.text()))
+        qd.exec_()
+
+    def new_game(self):
+        def create_new_game(empire_name: str, home_sys_name: str, starting_date: QDate):
+            starting_date = datetime(
+                starting_date.year(), starting_date.month(), starting_date.day()
+            )
+            self.loaded_game = Game()
+            self.loaded_game.new(
+                current_date=starting_date,
+                empire_name=empire_name,
+                capital_name=home_sys_name
+            )
+            self.setWindowTitle(f"{self.loaded_game.empire_name} - Not saved")
+            self.current_system = self.loaded_game.capital
+            self.update_frame_image()
+
+        qd = QDialog(self.ui.centralwidget)
+        qd.ui = NewGameDialog()
+        qd.ui.setupUi(qd)
+        qd.accepted.connect(lambda: create_new_game(
+            empire_name=qd.ui.ledEmpireName.text(),
+            home_sys_name=qd.ui.ledHomeName.text(),
+            starting_date=qd.ui.dateEdit.date()
+        ))
+        qd.exec_()
